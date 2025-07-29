@@ -5,7 +5,7 @@
 from flask import Blueprint
 from bank import User, db
 
-user_bp = Blueprint("user", __name__)
+user_bp = Blueprint('user', __name__)
 
 # Add any user-specific routes here if needed
 
