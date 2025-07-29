@@ -28,11 +28,17 @@ TURSO_DATABASE_URL = os.environ.get('TURSO_DATABASE_URL')
 TURSO_AUTH_TOKEN = os.environ.get('TURSO_AUTH_TOKEN')
 
 if TURSO_DATABASE_URL and TURSO_AUTH_TOKEN:
-    # Use Turso database
-    database_url = f'sqlite+{TURSO_DATABASE_URL}?secure=true'
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    # Use Turso database with libsql-client as the driver
+    # The format should be 'sqlite+libsql://' followed by the database URL
+    # and then the auth_token as a query parameter.
+    # Ensure the URL is correctly formatted for libsql-client's SQLAlchemy integration.
+    
+    # The libsql-client library expects the URL to be passed directly to the connect_args
+    # and the dialect to be 'sqlite'.
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         'connect_args': {
+            'url': TURSO_DATABASE_URL, # Pass the Turso URL here
             'auth_token': TURSO_AUTH_TOKEN,
             'check_same_thread': False
         }
